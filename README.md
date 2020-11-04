@@ -17,7 +17,7 @@ The options that can be used in the programs are:
 
 The total number of solutions found by the program matches with total number of solutions that exist for that board. Meaning the program successfully finds all the possible solutions for a given dimension of chess board. I have been able to verify this for upto a 17 by 17 board on my computer.
 
-When looking for one possible solution I have been able to find a solution for upto a 33 by 33 board. Beyond that the program takes reasonably large time to calculate a solution on my computer. 
+When looking for one possible solution I have been able to find a solution for upto a 35 by 35 board. Beyond that the program takes reasonably large time to calculate a solution on my computer. 
 
 Maybe you have a faster computer, and can run the program for a larger board. OR have a more optimized approach in solving the problem :)
 
