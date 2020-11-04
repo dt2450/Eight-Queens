@@ -6,12 +6,14 @@ unsigned int COLS = 0;
 
 //Reference: 
 //https://stackoverflow.com/questions/39395316/how-can-i-display-the-chess-board-content-as-strings-in-c-language-and-store-the
-#define QUEEN_SQUARE_CHAR   "♜" 
+#define QUEEN_SQUARE_CHAR   "♛" 
 #define BLANK_SQUARE_CHAR   "…"
 #define QUEEN_SQUARE_VAL    255
 
 static unsigned int **chess_board = NULL;
 unsigned int num_of_sols = 0;
+unsigned int print_board = 0;
+unsigned int only_one_solution = 0;
 
 void clear_board() {
     num_of_sols = 0;
@@ -127,6 +129,9 @@ int remove_queen(unsigned int row, unsigned int col) {
 }
 
 void print_char_board() {
+    if(!print_board) {
+        return;
+    }
     printf("------------------------\n");
     for(int i = 0; i < ROWS; i++) {
         for(int j = 0; j < COLS; j++) {
@@ -142,6 +147,9 @@ void print_char_board() {
 }
 
 void print_val_board() {
+    if(!print_board) {
+        return;
+    }
     printf("------------------------\n");
     for(int i = 0; i < ROWS; i++) {
         for(int j = 0; j < COLS; j++) {
@@ -214,6 +222,9 @@ int place_n_queens() {
                     num_of_sols++;
                     print_char_board();
                     //print_val_board();
+                    if (only_one_solution) {
+                        return 0;
+                    }
                     break;
                 }
             }
@@ -223,22 +234,92 @@ int place_n_queens() {
 }
 
 int main(int argc, char **argv) {
-    printf("Enter the number of rows in the board: ");
-    scanf("%d", &ROWS); 
+    char input_option = 'N';
+    int input_dimension = -1;
+    while(1) {
+        printf("Enter the number of rows in the board: ");
+        scanf("%d", &input_dimension); 
+    
+        //flush the input buffer to avoid infinite loop
+        //fflush(stdin);
+        //on platforms where fflush does not work
+        char c;
+        while((c = getchar()) != '\n' && c != EOF);
+        
+        if(input_dimension < 0 || input_dimension > 50) {
+            printf("Only 0-50 range is allowed\n");
+        } else {
+            break;
+        }
+    }
+    
+    ROWS = input_dimension;
     COLS = ROWS;
+    
+    while(1) {
+        printf("Is One Solution good enough? (Y/N): ");
+        scanf("%c", &input_option);
+
+        //flush the input buffer to avoid infinite loop
+        //fflush(stdin);
+        //on platforms where fflush does not work
+        char c;
+        while((c = getchar()) != '\n' && c != EOF);
+        
+        if(input_option == 'Y' || input_option == 'y') {
+            only_one_solution = 1;
+            print_board = 1;
+            break;
+        } else if(input_option == 'N' || input_option == 'n') {
+            only_one_solution = 0;
+            while(1) { 
+                printf("Do you want to print the boards? (Y/N): ");
+                scanf("%c", &input_option);
+
+                //flush the input buffer to avoid infinite loop
+                //fflush(stdin);
+                //on platforms where fflush does not work
+                char c;
+                while((c = getchar()) != '\n' && c != EOF);
+                               
+                if(input_option == 'Y' || input_option == 'y') {
+                    print_board = 1;
+                    break;
+                } else if(input_option == 'N' || input_option == 'n') {
+                    print_board = 0;
+                    break;
+                } else {
+                    printf("Only y/n options are allowed\n");
+                }
+            }
+            break;
+        } else {
+            printf("Only y/n options are allowed\n");
+        }
+    }
 
     chess_board = (unsigned int **)malloc(sizeof(unsigned int *)*ROWS);
 
+    if(chess_board == NULL) {
+        printf("Memory allocation error. Exiting...\n");
+        exit(-1);
+    }
     for(int i = 0; i < ROWS; i++) {
         chess_board[i] = (unsigned int *)malloc(sizeof(unsigned int)*COLS);
+        if(chess_board[i] == NULL) {
+            printf("Memory allocation error. Exiting...\n");
+            exit(-1);
+        }
     }
     
     clear_board();
     //print_char_board();
     //print_val_board();
-    printf("Non Recursive Solution\n"); 
     place_n_queens();
-    printf("Number of solutions is: %d\n", num_of_sols); 
+    printf("Non Recursive Solution\n"); 
+    if(!only_one_solution) {
+        printf("Number of solutions for %d by %d board is: %d\n", ROWS, COLS, num_of_sols); 
+    }
     //print_char_board();
     //print_val_board();
     
