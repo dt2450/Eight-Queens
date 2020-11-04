@@ -19,6 +19,6 @@ The total number of solutions found by the program matches with total number of 
 
 When looking for one possible solution I have been able to find a solution for upto a 33 by 33 board. Beyond that the program takes reasonably large time to calculate a solution on my computer. 
 
-Maybe you have a faster computer, and can run the program for a larger board.
+Maybe you have a faster computer, and can run the program for a larger board. OR have a more optimized approach in solving the problem :)
 
 
