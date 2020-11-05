@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 unsigned int ROWS = 0;
 unsigned int COLS = 0;
@@ -12,7 +13,6 @@ unsigned int COLS = 0;
 
 static unsigned int **chess_board = NULL;
 unsigned int num_of_sols = 0;
-unsigned int print_board = 0;
 unsigned int only_one_solution = 0;
 
 void clear_board() {
@@ -128,7 +128,7 @@ int remove_queen(unsigned int row, unsigned int col) {
     return 0;
 }
 
-void print_char_board() {
+void print_char_board(unsigned int print_board) {
     if(!print_board) {
         return;
     }
@@ -146,7 +146,7 @@ void print_char_board() {
     printf("------------------------\n");
 }
 
-void print_val_board() {
+void print_val_board(unsigned int print_board) {
     if(!print_board) {
         return;
     }
@@ -201,7 +201,7 @@ int place_queen_in_col(unsigned int col) {
     return success;
 }
 
-int place_n_queens() {
+int place_n_queens(unsigned int print_board) {
     int i = 0;
     while(i >= 0 && i < COLS) {
         for(; i < COLS; i++) {
@@ -220,8 +220,8 @@ int place_n_queens() {
             } else if(res == 1) {
                 if(i == (COLS - 1)) {
                     num_of_sols++;
-                    print_char_board();
-                    //print_val_board();
+                    print_char_board(print_board);
+                    //print_val_board(print_board);
                     if (only_one_solution) {
                         return 0;
                     }
@@ -236,6 +236,7 @@ int place_n_queens() {
 int main(int argc, char **argv) {
     char input_option = 'N';
     int input_dimension = -1;
+    unsigned int print_board = 0;
     while(1) {
         printf("Enter the number of rows in the board: ");
         scanf("%d", &input_dimension); 
@@ -305,23 +306,24 @@ int main(int argc, char **argv) {
         exit(-1);
     }
     for(int i = 0; i < ROWS; i++) {
-        chess_board[i] = (unsigned int *)malloc(sizeof(unsigned int)*COLS);
+        chess_board[i] = (unsigned int *)calloc(COLS, sizeof(unsigned int));
         if(chess_board[i] == NULL) {
             printf("Memory allocation error. Exiting...\n");
             exit(-1);
         }
+        //memset(chess_board[i], 0, sizeof(*chess_board[i]));
     }
     
     clear_board();
-    //print_char_board();
-    //print_val_board();
-    place_n_queens();
+    //print_char_board(1);
+    //print_val_board(1);
+    place_n_queens(print_board);
     printf("Non Recursive Solution\n"); 
     if(!only_one_solution) {
         printf("Number of solutions for %d by %d board is: %d\n", ROWS, COLS, num_of_sols); 
     }
-    //print_char_board();
-    //print_val_board();
+    //print_char_board(1);
+    //print_val_board(1);
     
     return 0;
 }
